@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:receitas/pages/category_meal_pages.dart';
 
 class CategoryListPage extends StatefulWidget {
   const CategoryListPage({super.key});
@@ -134,9 +135,13 @@ class _CategoryListPageState extends State<CategoryListPage> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         onTap: () {
-                          // TODO: Implementar navegação para listar receitas desta categoria
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Clicou em ${category['strCategory']}!')),
+                           Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CategoryMealsPage(
+                                categoryName: category['strCategory'], // Passando o nome da categoria
+                              ),
+                            ),
                           );
                         },
                       ),
