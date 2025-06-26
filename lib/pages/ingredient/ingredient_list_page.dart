@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:receitas/pages/ingredient/ingredient_meals_page.dart';
 
 class IngredientListPage extends StatefulWidget {
   const IngredientListPage({super.key});
@@ -157,17 +158,14 @@ class _IngredientListPageState extends State<IngredientListPage> {
                                   )
                                 : null,
                             onTap: () {
-                              // TODO: Implementar navegação para uma página que lista receitas com este ingrediente
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Clicou no ingrediente: ${ingredient['strIngredient']}!')),
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => IngredientMealsPage(
+                                    ingredientName: ingredient['strIngredient'], // Passa o nome do ingrediente clicado
+                                  ),
+                                ),
                               );
-                              // Exemplo de navegação futura para IngredientMealsPage:
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => IngredientMealsPage(ingredientName: ingredient['strIngredient']),
-                              //   ),
-                              // );
                             },
                           ),
                         );
