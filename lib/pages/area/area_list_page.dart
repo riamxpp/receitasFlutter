@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:receitas/pages/area_meal_page.dart';
+import 'package:receitas/pages/area/area_meal_page.dart';
 
 class AreaListPage extends StatefulWidget {
   const AreaListPage({super.key});

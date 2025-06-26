@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:receitas/pages/category_meal_pages.dart';
+import 'package:receitas/pages/category/category_meal_pages.dart';
 
 class CategoryListPage extends StatefulWidget {
   const CategoryListPage({super.key});

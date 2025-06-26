@@ -4,9 +4,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert'; // Para usar jsonDecode
 
 // Importe suas outras páginas depois de criá-las
-import 'package:receitas/pages/category_list_page.dart';
-import 'package:receitas/pages/area_list_page.dart';
-// import 'package:receitas/presentation/pages/ingredient_list_page.dart';
+import 'package:receitas/pages/category/category_list_page.dart';
+import 'package:receitas/pages/area/area_list_page.dart';
+import 'package:receitas/pages/ingredient/ingredient_list_page.dart';
 // import 'package:receitas/presentation/pages/random_meal_page.dart'; // Se for ter uma página dedicada apenas a isso
 
 
@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
               // TODO: Mudar para IngredientListPage quando criada
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const CategoryListPage()), // Mudar para IngredientListPage()
+                MaterialPageRoute(builder: (context) => const IngredientListPage()), // Mudar para IngredientListPage()
               );
             },
             child: const Text(
