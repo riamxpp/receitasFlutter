@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:receitas/pages/meal_details_page.dart';
 
 class CategoryMealsPage extends StatefulWidget {
   final String categoryName;
@@ -147,8 +148,13 @@ class _CategoryMealsPageState extends State<CategoryMealsPage> {
                             ),
                             subtitle: Text('ID: ${meal['idMeal']}'),
                             onTap: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Clicou na receita: ${meal['strMeal']}')),
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MealDetailsPage(
+                                    mealId: meal['idMeal'], // Passa o ID da receita clicada
+                                  ),
+                                ),
                               );
                             },
                           ),
