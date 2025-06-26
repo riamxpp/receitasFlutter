@@ -2,9 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-// Você pode adicionar a navegação para uma página de receitas por área aqui, similar à CategoryMealsPage
-// import 'package:receitas/presentation/pages/area_meals_page.dart'; // Exemplo futuro
+import 'package:receitas/pages/area_meal_page.dart';
 
 class AreaListPage extends StatefulWidget {
   const AreaListPage({super.key});
@@ -127,17 +125,14 @@ class _AreaListPageState extends State<AreaListPage> {
                               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                             ),
                             onTap: () {
-                              // TODO: Implementar navegação para uma página que lista receitas desta área
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Clicou na área: ${area['strArea']}!')),
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AreaMealsPage(
+                                    areaName: area['strArea'], // Passa o nome da área clicada
+                                  ),
+                                ),
                               );
-                              // Exemplo de navegação futura para AreaMealsPage (similar à CategoryMealsPage):
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => AreaMealsPage(areaName: area['strArea']),
-                              //   ),
-                              // );
                             },
                           ),
                         );
