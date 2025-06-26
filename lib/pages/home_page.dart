@@ -64,63 +64,56 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Receitas Deliciosas!'),
-        centerTitle: true,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Alinha itens nas extremidades
+          children: <Widget>[
+            const Text(
+              'Receitas Deliciosas!',
+              style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            Row(
+              children: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const CategoryListPage()),
+                    );
+                  },
+                  child: const Text(
+                    'Categorias',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AreaListPage()),
+                    );
+                  },
+                  child: const Text(
+                    'Áreas',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const IngredientListPage()),
+                    );
+                  },
+                  child: const Text(
+                    'Ingredientes',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
         backgroundColor: Colors.orange,
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const CategoryListPage()),
-              );
-            },
-            child: const Text(
-              'Categorias',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              // TODO: Mudar para AreaListPage quando criada
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AreaListPage()), // Mudar para AreaListPage()
-              );
-            },
-            child: const Text(
-              'Áreas',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              // TODO: Mudar para IngredientListPage quando criada
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const IngredientListPage()), // Mudar para IngredientListPage()
-              );
-            },
-            child: const Text(
-              'Ingredientes',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              // TODO: Mudar para RandomMealPage (se for uma página diferente)
-              // Ou, se a receita aleatória já está na Home, este botão pode recarregar.
-              _fetchRandomMeal(); // Recarrega uma nova receita aleatória na mesma tela
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Buscando nova receita aleatória...')),
-              );
-            },
-            child: const Text(
-              'Aleatória',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
       ),
       body: _isLoading
           ? const Center(
@@ -142,7 +135,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         const SizedBox(height: 20),
                         ElevatedButton.icon(
-                          onPressed: _fetchRandomMeal, // Tentar buscar novamente
+                          onPressed: _fetchRandomMeal,
                           icon: const Icon(Icons.refresh),
                           label: const Text('Tentar Novamente'),
                           style: ElevatedButton.styleFrom(
@@ -154,7 +147,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 )
-              : _randomMeal == null // Se não há erro mas a receita é nula (ex: API retornou vazio)
+              : _randomMeal == null
                   ? const Center(
                       child: Text(
                         'Nenhuma receita aleatória encontrada no momento. Tente novamente.',
@@ -162,7 +155,7 @@ class _HomePageState extends State<HomePage> {
                         style: TextStyle(fontSize: 18, color: Colors.grey),
                       ),
                     )
-                  : SingleChildScrollView( // Para permitir rolagem se o conteúdo for grande
+                  : SingleChildScrollView(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -179,13 +172,12 @@ class _HomePageState extends State<HomePage> {
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 20),
-                          // Exibindo a imagem da receita
                           _randomMeal!['strMealThumb'] != null && _randomMeal!['strMealThumb'].isNotEmpty
                               ? ClipRRect(
                                   borderRadius: BorderRadius.circular(15.0),
                                   child: Image.network(
                                     _randomMeal!['strMealThumb'],
-                                    width: MediaQuery.of(context).size.width * 0.8, // 80% da largura da tela
+                                    width: MediaQuery.of(context).size.width * 0.8,
                                     height: 250,
                                     fit: BoxFit.cover,
                                     errorBuilder: (context, error, stackTrace) => const Icon(
@@ -208,7 +200,7 @@ class _HomePageState extends State<HomePage> {
                               : const Icon(Icons.image_not_supported, size: 150, color: Colors.grey),
                           const SizedBox(height: 30),
                           ElevatedButton.icon(
-                            onPressed: _fetchRandomMeal, // Botão para buscar outra receita aleatória
+                            onPressed: _fetchRandomMeal,
                             icon: const Icon(Icons.shuffle),
                             label: const Text('Ver Outra Receita Aleatória'),
                             style: ElevatedButton.styleFrom(
@@ -219,7 +211,6 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          // Opcional: Adicionar uma descrição ou instruções curtas
                           if (_randomMeal!['strInstructions'] != null && _randomMeal!['strInstructions'].isNotEmpty)
                             const Text(
                               'Instruções (Resumo):',
