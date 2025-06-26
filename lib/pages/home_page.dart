@@ -5,7 +5,7 @@ import 'dart:convert'; // Para usar jsonDecode
 
 // Importe suas outras páginas depois de criá-las
 import 'package:receitas/pages/category_list_page.dart';
-// import 'package:receitas/presentation/pages/area_list_page.dart';
+import 'package:receitas/pages/area_list_page.dart';
 // import 'package:receitas/presentation/pages/ingredient_list_page.dart';
 // import 'package:receitas/presentation/pages/random_meal_page.dart'; // Se for ter uma página dedicada apenas a isso
 
@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage> {
               // TODO: Mudar para AreaListPage quando criada
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const CategoryListPage()), // Mudar para AreaListPage()
+                MaterialPageRoute(builder: (context) => const AreaListPage()), // Mudar para AreaListPage()
               );
             },
             child: const Text(
