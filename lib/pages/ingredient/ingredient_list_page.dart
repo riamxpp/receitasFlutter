@@ -114,25 +114,49 @@ class _IngredientListPageState extends State<IngredientListPage> {
                       itemCount: _ingredients.length,
                       itemBuilder: (context, index) {
                         final ingredient = _ingredients[index];
-                        // A API TheMealDB não fornece imagens para os ingredientes diretamente nesta lista,
-                        // mas fornece a URL para um ícone ou imagem (se você precisar).
-                        // O formato do ícone seria: 'https://www.themealdb.com/images/ingredients/${ingredient['strIngredient']}.png'
-                        final String? imageUrl = ingredient['strIngredient'] != null && ingredient['strIngredient'].isNotEmpty
-                            ? 'https://www.themealdb.com/images/ingredients/${ingredient['strIngredient']}-small.png'
-                            : null;
+                        // A API TheMealDB fornece a URL para a imagem do ingrediente
+                        final String imageUrl = 'https://www.themealdb.com/images/ingredients/${ingredient['strIngredient']}-small.png';
+                        
+                        final String description = ingredient['strDescription'] ?? 'Sem descrição.'; // Pega a descrição da API ou uma genérica
 
-                        return Card(
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          elevation: 4,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                          child: ListTile(
-                            leading: imageUrl != null
-                                ? Image.network(
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => IngredientMealsPage(
+                                  ingredientName: ingredient['strIngredient'], // Passa o nome do ingrediente clicado
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.3),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Imagem do Ingrediente
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Image.network(
                                     imageUrl,
-                                    width: 40,
-                                    height: 40,
-                                    fit: BoxFit.contain,
-                                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.food_bank, size: 40, color: Colors.grey),
+                                    width: 60, // Tamanho ajustado para o layout de lista
+                                    height: 60,
+                                    fit: BoxFit.cover, // Cobrirá o espaço
+                                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.food_bank, size: 60, color: Colors.orange), // Fallback para ícone
                                     loadingBuilder: (context, child, loadingProgress) {
                                       if (loadingProgress == null) return child;
                                       return Center(
@@ -143,30 +167,38 @@ class _IngredientListPageState extends State<IngredientListPage> {
                                         ),
                                       );
                                     },
-                                  )
-                                : const Icon(Icons.food_bank, size: 40, color: Colors.orange), // Ícone genérico para ingrediente
-                            title: Text(
-                              ingredient['strIngredient'] ?? 'Ingrediente Desconhecido',
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                            ),
-                            subtitle: ingredient['strDescription'] != null && ingredient['strDescription'].isNotEmpty
-                                ? Text(
-                                    ingredient['strDescription'],
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(fontSize: 14, color: Colors.black54),
-                                  )
-                                : null,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => IngredientMealsPage(
-                                    ingredientName: ingredient['strIngredient'], // Passa o nome do ingrediente clicado
                                   ),
                                 ),
-                              );
-                            },
+                                const SizedBox(width: 15),
+
+                                // Detalhes do Ingrediente (Título e Descrição)
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        ingredient['strIngredient'] ?? 'Ingrediente Desconhecido',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Text(
+                                        description,
+                                        maxLines: 4, // Permite mais linhas para a descrição
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey[700],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },

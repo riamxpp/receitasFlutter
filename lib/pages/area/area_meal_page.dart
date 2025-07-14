@@ -114,55 +114,112 @@ class _AreaMealsPageState extends State<AreaMealsPage> {
                         style: const TextStyle(fontSize: 18, color: Colors.grey),
                       ),
                     )
-                  : ListView.builder(
-                      padding: const EdgeInsets.all(10),
-                      itemCount: _meals.length,
-                      itemBuilder: (context, index) {
-                        final meal = _meals[index];
-                        return Card(
-                          margin: const EdgeInsets.symmetric(vertical: 8),
-                          elevation: 4,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                          child: ListTile(
-                            leading: meal['strMealThumb'] != null && meal['strMealThumb'].isNotEmpty
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.network(
-                                      meal['strMealThumb'],
-                                      width: 80,
-                                      height: 80,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image, size: 50, color: Colors.grey),
-                                      loadingBuilder: (context, child, loadingProgress) {
-                                        if (loadingProgress == null) return child;
-                                        return Center(
-                                          child: CircularProgressIndicator(
-                                            value: loadingProgress.expectedTotalBytes != null
-                                                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                                                : null,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  )
-                                : const Icon(Icons.restaurant_menu, size: 80, color: Colors.grey),
-                            title: Text(
-                              meal['strMeal'] ?? 'Nome da Receita Desconhecido',
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Text('ID: ${meal['idMeal']}'),
-                            onTap: () {
-                              // Ao clicar em uma receita na lista de áreas, navega para os detalhes da receita
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => MealDetailsPage(
-                                    mealId: meal['idMeal'],
-                                  ),
-                                ),
-                              );
-                            },
+                  : LayoutBuilder( // Adicionado LayoutBuilder para responsividade
+                      builder: (context, constraints) {
+                        // Define o número de colunas com base na largura disponível
+                        final double minItemWidth = 180; // Largura mínima para cada item (igual à CategoryMealsPage)
+                        final int crossAxisCount = (constraints.maxWidth / minItemWidth).floor().clamp(1, 3); // Entre 1 e 3 colunas
+
+                        return GridView.builder(
+                          padding: const EdgeInsets.all(12), // Padding geral da grid
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: crossAxisCount,
+                            crossAxisSpacing: 12, // Espaçamento horizontal entre os cards
+                            mainAxisSpacing: 12, // Espaçamento vertical entre os cards
+                            childAspectRatio: 0.75, // Proporção largura/altura dos cards (igual à CategoryMealsPage)
                           ),
+                          itemCount: _meals.length,
+                          itemBuilder: (context, index) {
+                            final meal = _meals[index];
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MealDetailsPage(
+                                      mealId: meal['idMeal'],
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10), // Bordas arredondadas para o container
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.2), // Sombra mais sutil
+                                      spreadRadius: 2,
+                                      blurRadius: 5,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch, // Estica os filhos na largura
+                                  children: [
+                                    // Imagem da Receita
+                                    Expanded(
+                                      flex: 3, // Dá mais espaço para a imagem
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.vertical(top: Radius.circular(10)), // Bordas arredondadas apenas no topo
+                                        child: meal['strMealThumb'] != null && meal['strMealThumb'].isNotEmpty
+                                            ? Image.network(
+                                                meal['strMealThumb'],
+                                                fit: BoxFit.cover, // Cobrirá o espaço disponível
+                                                errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image, size: 60, color: Colors.grey),
+                                                loadingBuilder: (context, child, loadingProgress) {
+                                                  if (loadingProgress == null) return child;
+                                                  return Center(
+                                                    child: CircularProgressIndicator(
+                                                      value: loadingProgress.expectedTotalBytes != null
+                                                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                                                          : null,
+                                                    ),
+                                                  );
+                                                },
+                                              )
+                                            : const Icon(Icons.restaurant_menu, size: 60, color: Colors.grey),
+                                      ),
+                                    ),
+                                    
+                                    // Nome da Receita e ID
+                                    Expanded(
+                                      flex: 1, // Dá menos espaço para o texto
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.center, // Centraliza o texto
+                                          mainAxisAlignment: MainAxisAlignment.center, // Centraliza verticalmente o texto
+                                          children: [
+                                            Text(
+                                              meal['strMeal'] ?? 'Nome da Receita Desconhecido',
+                                              textAlign: TextAlign.center,
+                                              maxLines: 2, // Limita a 2 linhas
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 15,
+                                                color: Colors.black87,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Text(
+                                              'ID: ${meal['idMeal']}',
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey[600],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
                         );
                       },
                     ),
